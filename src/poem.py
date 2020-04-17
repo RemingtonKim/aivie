@@ -135,8 +135,8 @@ class PoemGenerator(object):
 
     def generate_poem(self) -> str:
         """Generates a random poem using one of the structures provided in 'self.structures'."""
-        #current_structure = self.structure[str(random.randint(0, len(self.structure)-1))].split()
-        current_structure = self.structure['20'].split()
+        current_structure = self.structure[str(random.randint(0, len(self.structure)-1))].split()
+        #current_structure = self.structure['20'].split()
         for i in range(len(current_structure)):
                 component = current_structure[i]
                 if component=='|':
