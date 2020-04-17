@@ -8,7 +8,6 @@ class PoemGenerator(object):
 
     def __init__(self):
         """Creates a PoemGenerator instance"""
-        open('../generated_poems.txt', 'r')
         self.poem = []
         self.last_noun = None
         self.last_verb = None
@@ -65,7 +64,7 @@ class PoemGenerator(object):
             if self.inflect.singular_noun(self.last_noun)!=False:
                 return 'are' if tense == 'to_be_present' else 'were'
             else:
-                return 'is' if tense == 'to_be_present' else 'were'
+                return 'is' if tense == 'to_be_present' else 'was'
 
     def preprocess_word(self, word: str, part_of_speech: str) -> str:
         """
@@ -110,7 +109,7 @@ class PoemGenerator(object):
         elif part_of_speech == 'POSS_ADJ':
             return word
         elif part_of_speech == 'LINK':
-            if len(word.split())==1:
+            if len(word.split()) == 1:
                 if word == 'to_be_present' or word == 'to_be_past':
                     return self.to_be(word)
                 if self.verb_plurality_check():
@@ -123,6 +122,13 @@ class PoemGenerator(object):
                     return word
             else:
                 return word
+        elif part_of_speech == 'INT1':
+            self.last_noun = word
+            return word
+        elif part_of_speech == 'INT2':
+            return word
+        elif part_of_speech == 'PUNC':
+            return word        
         else:
             raise ValueError('{} is not a valid argument for part_of_speech'.format(part_of_speech))
 
@@ -152,6 +158,7 @@ class PoemGenerator(object):
             structure (list): the structure of the poem in the form of a list. ex) ['ARTICLE', 'NOUN', 'VERB']
         """
         assert len(self.poem) == len(structure)
+
         for i in range(len(structure)):
             part_of_speech = structure[i]
             if part_of_speech == 'ARTICLE':
