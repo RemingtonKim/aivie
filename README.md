@@ -7,7 +7,6 @@ how we seem intense<br>
 sound intense<br>
 what tells<br>
 we may be passionate.**
-<br>
 ___
 >**It obeys against the summer towards the navy autumn covers<br>
 it daintily fills<br>
