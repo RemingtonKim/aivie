@@ -11,6 +11,9 @@
         "OUT" : "../generated_poems.txt",
         "COORD_CONJ" : "../data/coordinating_conjunction.txt",
         "COLOR" : "../data/colors.txt",
-        "LINK" : "../data/linking_verbs.txt"
+        "LINK" : "../data/linking_verbs.txt",
+        "PUNC" : "../data/punctuation.txt",
+        "INT1" : "../data/interrogatives_1.txt",
+        "INT2" : "../data/interrogatives_2.txt"
     }
 }

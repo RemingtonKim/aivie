@@ -1,7 +1,14 @@
 # aivie
 
 *aivie* is a project that aims to generate literature while giving it meaning through different mediums and visual media. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. Here are some examples:
+>**How her pinnacle disobeys!<br>
+we ascend yet freely connect<br>
+how we seem intense<br>
+sound intense<br>
+what tells<br>
+we may be passionate.**
 <br>
+___
 >**It obeys against the summer towards the navy autumn covers<br>
 it daintily fills<br>
 at a cliff and seas for vulnerable wave<br>
