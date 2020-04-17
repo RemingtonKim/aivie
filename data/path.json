@@ -1,0 +1,16 @@
+{
+    "path": {
+        "ADJ" : "../data/nature_adjectives.txt",
+        "NOUN" : "../data/nature_noun.txt",
+        "VERB" : "../data/nature_verb.txt",
+        "ADVERB" : "../data/adverbs.txt",
+        "PREPO" : "../data/preposition.txt",
+        "POSS_ADJ" : "../data/possesive_adjectives.txt",
+        "ARTICLE" : "../data/articles.txt",
+        "PRONOUN" : "../data/pronouns.txt",
+        "OUT" : "../generated_poems.txt",
+        "COORD_CONJ" : "../data/coordinating_conjunction.txt",
+        "COLOR" : "../data/colors.txt",
+        "LINK" : "../data/linking_verbs.txt"
+    }
+}
