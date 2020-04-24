@@ -27,5 +27,5 @@ ___
 ## Setup
 1. `cd aivie` - navigate to folder
 2. `pip install requirements.txt` - install dependencies
-3. `cd src` - navigate to src folder
+3. `cd src_poem` - navigate to src folder
 4. `python poem.py` - generate a poem
