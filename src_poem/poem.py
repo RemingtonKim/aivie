@@ -6,7 +6,7 @@ import pattern.en as en
 
 class PoemGenerator(object):
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a PoemGenerator instance"""
         self.poem = []
         self.last_noun = None
@@ -18,7 +18,7 @@ class PoemGenerator(object):
         self.lemmatizer = nltk.WordNetLemmatizer()
 
 
-    def clear(self):
+    def clear(self) -> None:
         """Clears PoemGenerator after every each poem generation"""
         self.poem = []
         self.last_noun = None
@@ -151,7 +151,7 @@ class PoemGenerator(object):
         return output
 
 
-    def article_corrector(self, structure: list):
+    def article_corrector(self, structure: list) -> None:
         """
         Goes through the poem and changed any indefinite articles that are incorrect. For example, if the phrase 'a elephant' is present, this function changes it to 'an elephant'.
 

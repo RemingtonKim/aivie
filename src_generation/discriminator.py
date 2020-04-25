@@ -1,15 +1,17 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 
 class Discriminator(nn.Module):
     """Discriminator for the Cycle-GAN"""
 
-    def __init__(self, start_in: int = 3, start_out: int = 64, kernel_size: int = 4, padding: int = 1, stride: int = 2, negative_slope: int = 0.2, num_groups: int = 4):
+    def __init__(self, start_in: int = 3, start_out: int = 64, kernel_size: int = 4, padding: int = 1, stride: int = 2, negative_slope: int = 0.2, num_groups: int = 4) -> None:
         """
         Creates Discriminator instance
 
         Args:
-            start_in (int): number of channels in input image. Default is 3.
+            start_in (int): number of channels in input tensor. Default is 3.
             start_out (int): number of channels produced by first torch.nn.Conv2d layer. Default is 64.
             kernel_size (int): height and width for the 2D convolutional window in torch.nn.Conv2d layer. Default is 4.
             padding (int): size of zero-padding in torch.nn.Conv2d layer. Default is 1.
@@ -36,12 +38,18 @@ class Discriminator(nn.Module):
 
         self.model = nn.Sequential(*self._arg_model)
 
+    def forward(self, x):
+        """Forward, avg_pool, and flatten"""
+        x = self.model(x)
+        x = F.avg_pool2d(x, x.size()[0])
+        return x.view(x.size()[0], -1)
+
     def _build_conv_groups(self, in_channels: int, out_channels: int, kernel_size: int, padding: int, stride: int, negative_slope: int, normalization: bool  = True) -> list:
         """
         Builds convolutional 'group' consisting of torch.nn.Conv2d, (torch.nn.InstanceNorm2d), and torch.nn.LeakyReLU
 
         Args:
-            in_channels (int): number of channels in input image
+            in_channels (int): number of channels in input tensor
             out_channels (int): number of channels produced by torch.nn.Conv2d layer.
             kernel_size (int): height and width for the 2D convolutional window in torch.nn.Conv2d layer. 
             padding (int): size of zero-padding in torch.nn.Conv2d layer. 
@@ -68,5 +76,5 @@ class Discriminator(nn.Module):
 
 
 #check discriminator summary
-if __name__ == '__main__':  
+if __name__ == '__main__':
     print(Discriminator().model)
