@@ -2,7 +2,7 @@ import torch
 import torchvision
 import torch.nn as nn
 import torch.autograd as autograd
-from collections import OrderedDict
+
 
 class ResNetBlock(nn.Module):
     """
