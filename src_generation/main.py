@@ -1,7 +1,8 @@
 """
 A pytorch implementation of the Cycle-GAN architecture used for generating art in aivie.
 The original paper by Zhu et al. can be found at: https://arxiv.org/pdf/1703.10593.pdf
-Their more complete and performant official pytorch implementation can be found at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+This implementation is based on their more complete and performant official pytorch implementation, which can be found at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+This implementation was inspired by https://github.com/aitorzip/PyTorch-CycleGAN. However, this implementation is not a verbatim copy of the aforementioned implementation, as it was heavily modified and completely rewritten for practical and educational purposes. 
 """
 
 import torch
@@ -72,7 +73,7 @@ class CycleGAN:
             raise RuntimeError('Cannot train model when trainable is set to False')
         if self.data_loader is None:
             raise RuntimeError('No data loaded into the model for training')
-
+        
         for epoch in tqdm(range(epochs)):
             for _, batch in enumerate(self.data_loader):
 
