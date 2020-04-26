@@ -36,7 +36,8 @@ class ResNetBlock(nn.Module):
     
     def forward(self, x):
         """Concatenates tensors in forward"""
-        return x + self.model(x)
+        r = x.add(self.model(x))
+        return r
 
 
 class Generator(nn.Module):
@@ -94,7 +95,7 @@ class Generator(nn.Module):
         #output layer
         self._arg_model += [
             nn.ReflectionPad2d(padding=r_padding),
-            nn.Conv2d(self._out_channels, out_channels=end_out, kernel_size=ends_kernel_size, stride = stride, padding = padding),
+            nn.Conv2d(in_channels = self._out_channels, out_channels=end_out, kernel_size=ends_kernel_size, stride = stride, padding = padding),
             nn.Tanh()
         ]
 
