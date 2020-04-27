@@ -4,17 +4,22 @@ The original paper by Zhu et al. can be found at: https://arxiv.org/pdf/1703.105
 This implementation is based on their more complete and performant official pytorch implementation, which can be found at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
 This implementation was inspired by https://github.com/aitorzip/PyTorch-CycleGAN. However, this implementation is not a verbatim copy of the aforementioned implementation, as it was heavily modified and completely rewritten for practical and educational purposes. 
 """
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn.init as init
+import torch.utils.data as data
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
 import itertools
 import numpy as np
+import os
 from tqdm import tqdm
 from generator import Generator
 from discriminator import Discriminator
+from data_dataset import DatasetAB
+
 
 class CycleGAN:
     """complete Cycle-GAN class with two generators and two discriminators"""
@@ -61,13 +66,39 @@ class CycleGAN:
             path (str): path to the directory containing the data
             batch_size (int): batch size for the data. Default is 32.
         """
-        pass
 
+        #transformations to be applied to data. Modify as needed
+        transformations = transforms.Compose(transforms=[
+            transforms.Resize((256, 256)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize(mean = (0.5,0.5,0.5), std=(0.5,0.5,0.5))
+        ])
+
+        #apply transformations to image in given directory.
+        # images = DatasetAB(
+        #     datasets.ImageFolder(os.path.join(path, 'A'), transform=transformations),
+        #     datasets.ImageFolder(os.path.join(path, 'B'), transform=transformations)       
+        # )
+
+        images = DatasetAB(
+            datasets.ImageFolder('../data_img/', transform=transformations),
+            datasets.ImageFolder('../data_img/', transform=transformations)       
+        )
+
+        #load dataset into dataloader for use in training
+        self.data_loader = data.DataLoader(
+            dataset=images,
+            batch_size=batch_size,
+            shuffle=True,
+            pin_memory=True
+        )
 
     def train(self, epochs) -> None:
         """
         Trains Cycle-GAN model
         """
+        import matplotlib.pyplot as plt
         #raise necessary errors
         if not self.trainable:
             raise RuntimeError('Cannot train model when trainable is set to False')
@@ -76,9 +107,7 @@ class CycleGAN:
         
         for epoch in tqdm(range(epochs)):
             for _, batch in enumerate(self.data_loader):
-
-
-   
+                
 
     
 
@@ -88,4 +117,7 @@ class CycleGAN:
 
 #check Cycle-GAN model summary
 if __name__ == '__main__':
-    print(CycleGAN())
+    c = CycleGAN()
+    c.trainable = True
+    c.load_data(path='../data_img')
+    c.train(epochs=1)
