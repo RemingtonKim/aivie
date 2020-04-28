@@ -3,20 +3,18 @@ import torchvision
 import torch.nn as nn
 import torch.autograd as autograd
 
-
 class ResNetBlock(nn.Module):
     """
     A residual block used in the generator of this Cycle-GAN.
     """
-    def __init__(self, in_channels: int, stride: int = 2, r_padding: int = 1, kernel_size : int = 4):
+    def __init__(self, in_channels: int, r_padding: int = 1, kernel_size : int = 3):
         """
         Creates a ResNetBlock instance
         
         Args:
             in_channels (int) : number of channels in input image
-            stride (int) : stride argument for filter in torch.nn.Conv2d layer. Default is 2.
             r_padding (int) : size of padding for left, right, top and bottom for torch.nn.ReflectionPad2d. Default is 1.
-            kernel_size (int) : height and width for the 2D convolutional window in torch.nn.Conv2d layer. Default is 4.
+            kernel_size (int) : height and width for the 2D convolutional window in torch.nn.Conv2d layer. Default is 3.
         """
         super().__init__()
 
@@ -26,18 +24,17 @@ class ResNetBlock(nn.Module):
         #build model
         self.model = nn.Sequential(
             nn.ReflectionPad2d(padding = r_padding),
-            nn.Conv2d(in_channels = in_channels, out_channels = self._out_channels, kernel_size=kernel_size, stride=stride),
+            nn.Conv2d(in_channels = in_channels, out_channels = self._out_channels, kernel_size=kernel_size),
             nn.InstanceNorm2d(num_features=in_channels),
             nn.ReLU(inplace=True),
             nn.ReflectionPad2d(padding = r_padding),
-            nn.Conv2d(in_channels = in_channels, out_channels = self._out_channels, kernel_size=kernel_size, stride=stride),
+            nn.Conv2d(in_channels = in_channels, out_channels = self._out_channels, kernel_size=kernel_size),
             nn.InstanceNorm2d(num_features=in_channels)
         )
     
     def forward(self, x):
         """Concatenates tensors in forward"""
-        r = x.add(self.model(x))
-        return r
+        return x + self.model(x)
 
 
 class Generator(nn.Module):
@@ -67,7 +64,7 @@ class Generator(nn.Module):
         # c7s1-64 block
         self._arg_model = [
             nn.ReflectionPad2d(padding=r_padding),
-            nn.Conv2d(in_channels = start_in, out_channels = start_out, kernel_size = ends_kernel_size, stride = stride, padding = padding),
+            nn.Conv2d(in_channels = start_in, out_channels = start_out, kernel_size = ends_kernel_size),
             nn.InstanceNorm2d(num_features=start_out),
             nn.ReLU(inplace=True)
         ]
@@ -79,7 +76,7 @@ class Generator(nn.Module):
         for _ in range(self.NUM_DOWNSAMPLE):
             self._in_channels = self._out_channels
             self._out_channels *= 2
-            self._arg_model += self._downsample(in_channels=self._in_channels, out_channels=self._out_channels, padding = padding, stride = stride, kernel_size=mid_kernel_size)
+            self._arg_model += self._downsample(in_channels=self._in_channels, out_channels=self._out_channels, padding = padding, kernel_size=mid_kernel_size, stride=stride)
 
         #R256 blocks
         for _ in range(n_resnet):
@@ -90,12 +87,12 @@ class Generator(nn.Module):
         for _ in range(self.NUM_UPSAMPLE):
             self._in_channels = self._out_channels
             self._out_channels = self._in_channels // 2
-            self._arg_model += self._upsample(in_channels=self._in_channels, out_channels=self._out_channels, kernel_size=mid_kernel_size, stride=stride, padding=padding, output_padding=padding)
+            self._arg_model += self._upsample(in_channels=self._in_channels, out_channels=self._out_channels, kernel_size=mid_kernel_size, padding=padding, output_padding=padding, stride = stride)
 
         #output layer
         self._arg_model += [
             nn.ReflectionPad2d(padding=r_padding),
-            nn.Conv2d(in_channels = self._out_channels, out_channels=end_out, kernel_size=ends_kernel_size, stride = stride, padding = padding),
+            nn.Conv2d(in_channels = self._out_channels, out_channels=end_out, kernel_size=ends_kernel_size),
             nn.Tanh()
         ]
 
@@ -108,7 +105,7 @@ class Generator(nn.Module):
         return self.model(x)
 
     
-    def _downsample(self, in_channels: int, out_channels: int, padding: int, stride: int, kernel_size: int) -> list:
+    def _downsample(self, in_channels: int, out_channels: int, padding: int, kernel_size: int, stride: int) -> list:
         """
         Creates downsampling block for generator
 
@@ -116,20 +113,20 @@ class Generator(nn.Module):
             in_channels (int): number of channels in input tensor
             out_channels (int): number of channels produced by torch.nn.Conv2d layer
             padding (int): size of zero-padding in torch.nn.Conv2d layer.
-            stride (int): stride argument for filter in torch.nn.Conv2d layer.
             kernel_size (int): height and width for the 2D convolutional window in torch.nn.Conv2d layer.
+            stride (int) : stride argument for filter in torch.nn.Conv2d layer.
         Returns:
             list: list with torch.nn.Conv2d, torch.nn.InstanceNorm2d, nn.ReLU
         """
         cur = [
-            nn.Conv2d(in_channels= in_channels, out_channels=out_channels, kernel_size=kernel_size, stride = stride, padding = padding),
+            nn.Conv2d(in_channels= in_channels, out_channels=out_channels, kernel_size=kernel_size, padding = padding, stride=stride),
             nn.InstanceNorm2d(num_features=out_channels),
             nn.ReLU(inplace=True)
         ]
         return cur
 
 
-    def _upsample(self, in_channels: int, out_channels: int, kernel_size: int, stride: int, padding: int, output_padding: int) -> list:
+    def _upsample(self, in_channels: int, out_channels: int, kernel_size: int, padding: int, output_padding: int, stride: int) -> list:
         """
         Creates upsampling block for generator
 
@@ -138,13 +135,13 @@ class Generator(nn.Module):
             out_channels (int): number of channels produced by torch.nn.Conv2d layer
             padding (int): size of zero-padding in torch.nn.Conv2d layer.
             output_padding (int) : controls additional size added to output of nn.ConvTranspose2d
-            stride (int): stride argument for filter in torch.nn.Conv2d layer.
+            stride (int) : stride argument for filter in torch.nn.Conv2d layer.
             kernel_size (int): height and width for the 2D convolutional window in torch.nn.ConvTranspose2d layer.
         Returns:
             list: list with torch.nn.ConvTranspose2d, torch.nn.InstanceNorm2d, nn.ReLU
         """
         cur = [
-            nn.ConvTranspose2d(in_channels= in_channels, out_channels=out_channels, kernel_size=kernel_size, stride = stride, padding = padding, output_padding=output_padding),
+            nn.ConvTranspose2d(in_channels= in_channels, out_channels=out_channels, kernel_size=kernel_size, padding = padding, output_padding=output_padding, stride=stride),
             nn.InstanceNorm2d(num_features=out_channels),
             nn.ReLU(inplace=True)
         ]
@@ -152,4 +149,5 @@ class Generator(nn.Module):
 
 #check model summary
 if __name__ == '__main__':
-    print(Generator().model)
+    from torchsummary import summary
+    summary(Generator(), (3, 256, 256), device='cpu')

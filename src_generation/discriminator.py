@@ -76,4 +76,5 @@ class Discriminator(nn.Module):
 
 #check discriminator summary
 if __name__ == '__main__':
-    print(Discriminator().model)
+    from torchsummary import summary
+    summary(Discriminator(), (3, 256, 256), device='cpu')

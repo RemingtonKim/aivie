@@ -12,8 +12,8 @@ class DatasetAB(data.Dataset):
         length = len(set([len(d) for d in self.datasets]))
 
         assert length == 1
-        return length
+        return len(self.datasets[0])
 
     def __getitem__(self, index:int) -> tuple:
         """Returns an element from dataset A and B"""
-        return tuple(d[index] for d in self.datasets)
+        return tuple(d[index][0] for d in self.datasets)

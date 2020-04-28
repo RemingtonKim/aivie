@@ -12,8 +12,8 @@ class PoemGenerator(object):
         self.last_noun = None
         self.last_verb = None
         self.last_adj = None
-        self.paths = json.load(open('../data/path.json'))['path']
-        self.structure = json.load(open('../data/structure.json'))['structure']
+        self.paths = json.load(open('../data_lit/path.json'))['path']
+        self.structure = json.load(open('../data_lit/structure.json'))['structure']
         self.inflect = inflect.engine()
         self.lemmatizer = nltk.WordNetLemmatizer()
 
