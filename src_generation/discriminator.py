@@ -28,13 +28,18 @@ class Discriminator(nn.Module):
         self._out_channels = start_out
 
         #add groups with normalization to model
-        for _ in range(num_groups-1):
+        for _ in range(num_groups-2):
             self._in_channels = self._out_channels
             self._out_channels *= 2
             self._arg_model += self._build_conv_groups(in_channels=self._in_channels, out_channels=self._out_channels, kernel_size = kernel_size, padding = padding, stride = stride, negative_slope = negative_slope)
         
+        #add final conv group to model
+        self._in_channels = self._out_channels
+        self._out_channels *= 2
+        self._arg_model += self._build_conv_groups(in_channels=self._in_channels, out_channels=self._out_channels, kernel_size = kernel_size, padding = padding, stride = stride, negative_slope = negative_slope, has_stride=False)
+
         #add dense classification layer
-        self._arg_model.append(nn.Conv2d(in_channels = self._out_channels, out_channels = 1, kernel_size = kernel_size, stride = stride, padding = padding))
+        self._arg_model.append(nn.Conv2d(in_channels = self._out_channels, out_channels = 1, kernel_size = kernel_size, padding = padding))
 
         self.model = nn.Sequential(*self._arg_model)
 
@@ -43,7 +48,7 @@ class Discriminator(nn.Module):
         r = self.model(x)
         return r.view(r.size()[0], -1)
 
-    def _build_conv_groups(self, in_channels: int, out_channels: int, kernel_size: int, padding: int, stride: int, negative_slope: int, normalization: bool  = True) -> list:
+    def _build_conv_groups(self, in_channels: int, out_channels: int, kernel_size: int, padding: int, stride: int, negative_slope: int, normalization: bool  = True, has_stride: bool = True) -> list:
         """
         Builds convolutional 'group' consisting of torch.nn.Conv2d, (torch.nn.InstanceNorm2d), and torch.nn.LeakyReLU
 
@@ -55,14 +60,18 @@ class Discriminator(nn.Module):
             stride (int): stride argument for filter in torch.nn.Conv2d layer. 
             normalization (bool): determines whether or not the group will have normalization. Normalization if True, else no normalization.
             negative_slope (int): determines the negative slope of the torch.nn.LeakyReLU layer.
+            has_stride (bool): determines whether the torch.nn.Conv2d layers has a stride. Default is True.
 
         Returns:
             list : list with a torch.nn.Conv2d, (torch.nn.InstanceNorm2d), and torch.nn.LeakyReLU to be a component of full Discriminator
         """
         cur = []
-        
+
         #appends convolutional layer
-        cur.append(nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride = stride, padding = padding))
+        if has_stride:
+            cur.append(nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride = stride, padding = padding))
+        else:
+            cur.append(nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, padding = padding))
 
         #appends normalization layer
         if normalization:
