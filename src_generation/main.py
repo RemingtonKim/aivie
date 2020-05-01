@@ -13,6 +13,7 @@ import torch.utils.data as data
 import torch.autograd as autograd
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
+import torchvision.utils as utils
 import itertools
 import numpy as np
 import os
@@ -65,6 +66,14 @@ class CycleGAN:
 
         #data handling
         self.data_loader = None
+
+        #transformations to be applied to data when loaded in. Modify as needed
+        self.transformations = transforms.Compose(transforms=[
+            transforms.Resize((256, 256)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize(mean = (0.5,0.5,0.5), std=(0.5,0.5,0.5))
+        ])
     
     def load_data(self, path_A: str, path_B: str, batch_size: int = 32) -> None:
         """
@@ -75,19 +84,10 @@ class CycleGAN:
             path_B (str): path to the directory containing the data for B
             batch_size (int): batch size for the data. Default is 32.
         """
-
-        #transformations to be applied to data. Modify as needed
-        transformations = transforms.Compose(transforms=[
-            transforms.Resize((256, 256)),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(mean = (0.5,0.5,0.5), std=(0.5,0.5,0.5))
-        ])
-
         #apply transformations to image in given directory.
         images = DatasetAB(
-            datasets.ImageFolder(path_A, transform=transformations),
-            datasets.ImageFolder(path_B, transform=transformations)       
+            datasets.ImageFolder(path_A, transform=self.transformations),
+            datasets.ImageFolder(path_B, transform=self.transformations)       
         )
         #load dataset into dataloader for use in training
         self.data_loader = data.DataLoader(
@@ -122,9 +122,6 @@ class CycleGAN:
                 #current batch             
                 batch_real_a = autograd.Variable(batch[0]).to(self.device)
                 batch_real_b = autograd.Variable(batch[1]).to(self.device)
-                print(batch_real_a.shape)
-                print(batch_real_b.shape)
-                
                 
                 #generator training
                 self.optim_generator.zero_grad()
@@ -132,11 +129,11 @@ class CycleGAN:
                 #GAN losses
                 fake_b = self.generator_A2B(batch_real_a)
                 pred_fake = self.discriminator_B(fake_b)
-                generator_A2B_loss = self.criterion_gan(pred_fake, fake_b)
+                generator_A2B_loss = self.criterion_gan(pred_fake, self.target_reals)
 
                 fake_a = self.generator_B2A(batch_real_b)
                 pred_fake = self.discriminator_A(fake_a)
-                generator_B2A_loss = self.criterion_gan(pred_fake, fake_a)
+                generator_B2A_loss = self.criterion_gan(pred_fake, self.target_reals)
 
                 #forward and backward cycle losses
                 reconstructed_a = self.generator_B2A(fake_b)
@@ -183,15 +180,70 @@ class CycleGAN:
                 loss_discriminator_b.backward()
 
                 self.optim_discriminator_B.step()
+            
+            #save models every epoch
+            torch.save(self.generator_A2B.state_dict(), '../trained_models/generator_A2B.pth')
+            torch.save(self.generator_B2A.state_dict(), '../trained_models/generator_B2A.pth')
+            torch.save(self.discriminator_A.state_dict(), '../trained_models/discriminator_A.pth')
+            torch.save(self.discriminator_B.state_dict(), '../trained_models/discriminator_B.pth')
                 
-    def generate(self):
-        pass
+    def generate(self, img_dir: str, out_dir: str, direction: str) -> None:
+        """
+        Generates images using trained Cycle-GAN model.
+        img_dir (str): directory from which images will be generated
+        out_dir (str): directory where generated images will be outputted. 
+        direction (str): direction of image generation. Valid arguments are 'A2B' and 'B2A'
+        """
+        #A2B
+        if direction.lower() == 'a2b':
+            temp_generator = Generator()
+
+            #load in model from same .pth file path as in train() method
+            temp_generator.load_state_dict(torch.load('../trained_models/generator_A2B.pth'))
+
+            #load dataset into dataloader for use in generating
+            temp_data_loader = data.DataLoader(
+                dataset=datasets.ImageFolder(img_dir, transform=self.transformations),
+                batch_size=1,
+                shuffle=True,
+                pin_memory=True
+            )
+            with torch.no_grad():
+                for index, batch in enumerate(temp_data_loader):
+                    #generate image.
+                    img = (temp_generator(batch[0]).data + 1)/2.0
+
+                    #save image in directory
+                    utils.save_image(img, os.path.join(out_dir, '{}.png'.format(index)))
+
+        #B2A
+        elif direction.lower() == 'b2a':
+            temp_generator = Generator()
+
+            #load in model from same .pth file path as in train() method
+            temp_generator.load_state_dict(torch.load('../trained_models/generator_B2A.pth'))
+            
+            #load dataset into dataloader for use in generating
+            temp_data_loader = data.DataLoader(
+                dataset=datasets.ImageFolder(img_dir, transform=self.transformations),
+                batch_size=1,
+                shuffle=True,
+                pin_memory=True
+            )
+            with torch.no_grad():
+                for index, batch in enumerate(temp_data_loader):
+                    #generate image.
+                    img = (temp_generator(batch[0]).data + 1)/2.0
+
+                    #save image in directory
+                    utils.save_image(img, os.path.join(out_dir, '{}.png'.format(index)))
+
+        #raise error if invalid direction is passed
+        else:
+            raise ValueError('{} is not a valid direction'.format(direction))
 
 
-#check Cycle-GAN model summary
+#check Cycle-GAN model and generate images
 if __name__ == '__main__':
     c = CycleGAN()
-    c.trainable = True
-    c.load_data(path_A='../data_img_A', path_B='../data_img_B', batch_size=8)
-    c.train(epochs=1)
-    print('done')
+    c.generate('../data_img_A', '../results/', 'a2b')

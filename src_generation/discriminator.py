@@ -45,8 +45,8 @@ class Discriminator(nn.Module):
 
     def forward(self, x):
         """Forward and flatten"""
-        r = self.model(x)
-        return r.view(r.size()[0], -1)
+        x = self.model(x)
+        return F.avg_pool2d(x, x.size()[2:]).view(x.size()[0], -1)
 
     def _build_conv_groups(self, in_channels: int, out_channels: int, kernel_size: int, padding: int, stride: int, negative_slope: int, normalization: bool  = True, has_stride: bool = True) -> list:
         """
