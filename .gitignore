@@ -2,3 +2,6 @@ src_poem/__pycache__
 src_generation/__pycache__
 generated_poems.txt
 trained_models/
+src_generation/.ipynb_checkpoints
+TODO
+results

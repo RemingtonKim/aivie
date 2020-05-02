@@ -8,12 +8,17 @@ class DatasetAB(data.Dataset):
         self.datasets = datasets
     
     def __len__(self) -> int:
-        """Returns length of dataset, making sure that A and B are the same length"""
-        length = len(set([len(d) for d in self.datasets]))
+        """Returns length of max dataset"""
+        length = [len(d) for d in self.datasets]
 
-        assert length == 1
-        return len(self.datasets[0])
+        return max(length)
 
     def __getitem__(self, index:int) -> tuple:
         """Returns an element from dataset A and B"""
-        return tuple(d[index][0] for d in self.datasets)
+        d = [dataset for dataset in self.datasets]
+        assert len(d) == 2
+
+        a = d[0][index%len(d[0])]
+        b = d[1][index%len(d[1])]
+        
+        return a[0], b[0]
