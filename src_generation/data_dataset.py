@@ -18,6 +18,7 @@ class DatasetAB(data.Dataset):
         d = [dataset for dataset in self.datasets]
         assert len(d) == 2
 
+        #modulo ensures index is within length of dataset
         a = d[0][index%len(d[0])]
         b = d[1][index%len(d[1])]
         

@@ -116,8 +116,10 @@ class CycleGAN:
         
         # iterate through epochs
         for epoch in range(epochs):
+
+            t = tqdm(iter(self.data_loader), leave = False, total=len(self.data_loader))
             #iterate through batches
-            for _, batch in tqdm(enumerate(self.data_loader)):
+            for _, batch in enumerate(t):
 
                 #current batch             
                 batch_real_a = autograd.Variable(batch[0]).to(self.device)
@@ -246,4 +248,4 @@ class CycleGAN:
 #check Cycle-GAN model and generate images
 if __name__ == '__main__':
     c = CycleGAN()
-    c.generate('../data_img_A', '../results/', 'a2b')
+    c.generate('../data_img_A', '../', 'b2a')
