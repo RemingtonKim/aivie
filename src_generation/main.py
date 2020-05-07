@@ -74,6 +74,13 @@ class CycleGAN:
             transforms.ToTensor(),
             transforms.Normalize(mean = (0.5,0.5,0.5), std=(0.5,0.5,0.5))
         ])
+
+        #transformations for generation
+        self.transformations = transforms.Compose(transforms=[
+            transforms.Resize((256, 256)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean = (0.5,0.5,0.5), std=(0.5,0.5,0.5))
+        ])
     
     def load_data(self, path_A: str, path_B: str, batch_size: int = 32) -> None:
         """
@@ -205,9 +212,8 @@ class CycleGAN:
 
             #load dataset into dataloader for use in generating
             temp_data_loader = data.DataLoader(
-                dataset=datasets.ImageFolder(img_dir, transform=self.transformations),
+                dataset=datasets.ImageFolder(img_dir, transform=self.gen_transformations),
                 batch_size=1,
-                shuffle=True,
                 pin_memory=True
             )
             with torch.no_grad():
@@ -229,7 +235,6 @@ class CycleGAN:
             temp_data_loader = data.DataLoader(
                 dataset=datasets.ImageFolder(img_dir, transform=self.transformations),
                 batch_size=1,
-                shuffle=True,
                 pin_memory=True
             )
             with torch.no_grad():
@@ -248,4 +253,4 @@ class CycleGAN:
 #check Cycle-GAN model and generate images
 if __name__ == '__main__':
     c = CycleGAN()
-    c.generate('../data_img_A', '../', 'b2a')
+    c.generate('../data_img_C', '../results', 'b2a')
