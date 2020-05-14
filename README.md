@@ -1,4 +1,4 @@
-# aivie
+# ***aivie***
 
 *aivie* is a project that aims to generate literature while giving it meaning through different mediums and visual media. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. Here are some examples:
 >**How her pinnacle disobeys!<br>
@@ -27,5 +27,5 @@ ___
 ## Setup
 1. `cd aivie` - navigate to folder
 2. `pip install requirements.txt` - install dependencies
-3. `cd src_poem` - navigate to src folder
-4. `python poem.py` - generate a poem
+3. [Instructions for generating poems](./src_poem/INFO.md)
+4. [Instructions for generating images](./src_generation/INFO.md)
