@@ -2,7 +2,7 @@
     "path": {
         "ADJ" : "../data_lit/nature_adjectives.txt",
         "NOUN" : "../data_lit/nature_noun.txt",
-        "VERB" : "../data_lit_lit/nature_verb.txt",
+        "VERB" : "../data_lit/nature_verb.txt",
         "ADVERB" : "../data_lit/adverbs.txt",
         "PREPO" : "../data_lit/preposition.txt",
         "POSS_ADJ" : "../data_lit/possesive_adjectives.txt",

@@ -253,4 +253,4 @@ class CycleGAN:
 #check Cycle-GAN model and generate images
 if __name__ == '__main__':
     c = CycleGAN()
-    c.generate('../data_img_C', '../results', 'b2a')
+    c.generate('../data_img_A', '../results/van_gogh', 'b2a')

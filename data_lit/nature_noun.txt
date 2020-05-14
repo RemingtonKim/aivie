@@ -31,7 +31,6 @@ cordillera
 cosmography
 crater
 dam
-deft
 demise
 desert
 dune
@@ -114,8 +113,8 @@ road
 rock
 sanctuary
 sand
-sane
-scenic
+sanity
+scene
 sea shell
 seas
 season
