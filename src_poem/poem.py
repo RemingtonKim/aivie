@@ -148,6 +148,7 @@ class PoemGenerator(object):
         self.article_corrector(current_structure)
         output = '\n'.join(map(self.strip, ' '.join(self.poem).splitlines()))
         self.clear()
+        
         return output
 
 

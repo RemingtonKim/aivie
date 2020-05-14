@@ -1,7 +1,7 @@
 # ***aivie*** - Poem Generation
 ## Instructions
 
-1. `cd src_poem` - navigate to directory containing poem generation files.
+1. `cd src_poem` - navigate to directory.
 2. `python main.py` - execute code that generates 100 poems to `../generated_poems.txt`
 ## How it Works
 
