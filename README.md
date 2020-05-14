@@ -1,3 +1,5 @@
+![](./data_img/logo.png)
+
 # ***aivie***
 
 *aivie* is a project that aims to generate literature while giving it meaning through different mediums and visual media. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. Here are some examples:
