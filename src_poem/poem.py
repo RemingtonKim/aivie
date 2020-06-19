@@ -127,8 +127,12 @@ class PoemGenerator(object):
             return word
         elif part_of_speech == 'INT2':
             return word
-        elif part_of_speech == 'PUNC':
-            return word        
+        elif part_of_speech == 'PERIOD':
+            return word
+        elif part_of_speech == 'QUEST':
+            return word
+        elif part_of_speech == 'EXC':
+            return word       
         else:
             raise ValueError('{} is not a valid argument for part_of_speech'.format(part_of_speech))
 
@@ -148,8 +152,8 @@ class PoemGenerator(object):
         self.article_corrector(current_structure)
         output = '\n'.join(map(self.strip, ' '.join(self.poem).splitlines()))
         self.clear()
-        
-        return output
+
+        return '\n'.join([line.capitalize() for line in output.splitlines()])
 
 
     def article_corrector(self, structure: list) -> None:

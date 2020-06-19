@@ -2,3 +2,6 @@ mysqlclient
 nltk
 inflect
 Pattern
+tqdm
+pytorch
+torchvision

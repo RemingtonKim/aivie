@@ -1,3 +1,7 @@
+"""
+The art generation in *aivie* is done with a generative adversarial network (GAN) architecture called Cycle-GAN, which allows unpaired image to image translation. This architecture was created by Zhu et al., and their original paper can be found at https://arxiv.org/pdf/1703.10593.pdf. The official implementation by junyanz, https://github.com/junyanz/CycleGAN, as well as a simpler implementation by aitorzip, https://github.com/aitorzip/PyTorch-CycleGAN, inspired my implementation. I rewrote the entire architecture to familiarize myself with pytorch, make necessary modifications while adding functionality. Cycle-GAN worked in aivie by translating images of flowers into the style of abstract art. 
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -185,10 +189,10 @@ class CycleGAN:
                 self.optim_discriminator_B.step()
             
             #save models every epoch
-            torch.save(self.generator_A2B.state_dict(), '../trained_models/generator_A2B.pth')
-            torch.save(self.generator_B2A.state_dict(), '../trained_models/generator_B2A.pth')
-            torch.save(self.discriminator_A.state_dict(), '../trained_models/discriminator_A.pth')
-            torch.save(self.discriminator_B.state_dict(), '../trained_models/discriminator_B.pth')
+            torch.save(self.generator_A2B.state_dict(), '../trained_models/generator_A2B_{}.pth'.format(epoch))
+            torch.save(self.generator_B2A.state_dict(), '../trained_models/generator_B2A_{}.pth'.format(epoch))
+            torch.save(self.discriminator_A.state_dict(), '../trained_models/discriminator_A_{}.pth'.format(epoch))
+            torch.save(self.discriminator_B.state_dict(), '../trained_models/discriminator_B.pth_{}'.format(epoch))
                 
     def generate(self, img_dir: str, out_dir: str, direction: str) -> None:
         """
@@ -223,7 +227,7 @@ class CycleGAN:
             temp_generator = Generator()
 
             #load in model from same .pth file path as in train() method
-            temp_generator.load_state_dict(torch.load('../trained_models/generator_B2A.pth'))
+            temp_generator.load_state_dict(torch.load('../trained_models/generator_B2A_70.pth'))
             
             #load dataset into dataloader for use in generating
             temp_data_loader = data.DataLoader(
@@ -247,4 +251,4 @@ class CycleGAN:
 #check Cycle-GAN model and generate images
 if __name__ == '__main__':
     c = CycleGAN()
-    c.generate('../data_img', '../results/van_gogh', 'b2a')
+    c.generate('../data_flower', '../results/abstract', 'b2a')

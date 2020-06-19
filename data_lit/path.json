@@ -12,7 +12,9 @@
         "COORD_CONJ" : "../data_lit/coordinating_conjunction.txt",
         "COLOR" : "../data_lit/colors.txt",
         "LINK" : "../data_lit/linking_verbs.txt",
-        "PUNC" : "../data_lit/punctuation.txt",
+        "PERIOD" : "../data_lit/period.txt",
+        "QUEST" : "../data_lit/question.txt",
+        "EXC" : "../data_lit/exc.txt",
         "INT1" : "../data_lit/interrogatives_1.txt",
         "INT2" : "../data_lit/interrogatives_2.txt"
     }

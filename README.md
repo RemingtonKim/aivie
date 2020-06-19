@@ -2,29 +2,43 @@
 
 # ***aivie***
 
-*aivie* is a project that aims to generate literature while giving it meaning through different mediums and visual media. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. Here are some examples:
->**How her pinnacle disobeys!<br>
-we ascend yet freely connect<br>
-how we seem intense<br>
-sound intense<br>
-what tells<br>
-we may be passionate.**
-___
->**It obeys against the summer towards the navy autumn covers<br>
-it daintily fills<br>
-at a cliff and seas for vulnerable wave<br>
-original so staunch<br>
-charcoal yet chartreuse<br>
-its cave lies<br>
-she diagnoses in a coral moon<br>**
-___
->**Gorgeous and feldspar<br>
-mountains justify<br>
-immediately  electrify<br>
-the earthy water<br>
-celestial brass**<br>
-___
-*aivie* is a WIP, so more is coming.<br>
+*aivie* is a project that aims to generate literature and visual art. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. More information about this process is located [here](./src_poem/INFO.md). The visual art has been generated using the [Cycle-GAN] architecture. More information about this process is located [here](./src_generation/INFO.md).
+
+## Examples
+
+![](./data_img/result_1.png)
+<br>
+Where it sings?
+<br>
+How the forest dearly defies
+<br>
+Who joins!
+<br>
+Uselessly within the lighthouse
+<br>
+Cerulean butterfly absorbs
+<br>
+Silently frightens over the imitation
+<br>
+It obeys
+<br>
+It runs
+<br>
+Native wind adds
+<br>
+![](./data_img/result_2.png)
+<br>
+Why its cave begins? <br>
+They continue yet seriously fix
+<br>
+How you look zealous
+<br>
+Feel deplorable
+<br>
+Who ascends?
+<br>
+You are migratory?
+<br>
 
 ## Setup
 1. `cd aivie` - navigate to folder
