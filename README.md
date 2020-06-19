@@ -7,38 +7,26 @@
 ## Examples
 
 ![](./data_img/result_1.png)
-<br>
+```
 Where it sings?
-<br>
 How the forest dearly defies
-<br>
 Who joins!
-<br>
 Uselessly within the lighthouse
-<br>
 Cerulean butterfly absorbs
-<br>
 Silently frightens over the imitation
-<br>
 It obeys
-<br>
 It runs
-<br>
 Native wind adds
-<br>
+```
 ![](./data_img/result_2.png)
-<br>
-Why its cave begins? <br>
+```
+Why its cave begins?
 They continue yet seriously fix
-<br>
 How you look zealous
-<br>
 Feel deplorable
-<br>
 Who ascends?
-<br>
 You are migratory?
-<br>
+```
 
 ## Setup
 1. `cd aivie` - navigate to folder
