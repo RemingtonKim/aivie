@@ -2,7 +2,7 @@
 
 # ***aivie***
 
-*aivie* is a project that aims to generate literature and visual art. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. More information about this process is located [here](./src_poem/INFO.md). The visual art has been generated using the [Cycle-GAN] architecture. More information about this process is located [here](./src_generation/INFO.md).
+*aivie* is a project that aims to generate literature and visual art. Poems have been generated randomly through the assignment of words to a given parts-of-speech structure. More information about this process is located [here](./src_poem/INFO.md). The visual art has been generated using the [Cycle-GAN](https://arxiv.org/pdf/1703.10593.pdf) architecture. More information about this process is located [here](./src_generation/INFO.md).
 
 ## Examples
 
